@@ -1,0 +1,95 @@
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  TextInputProps,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { colors } from "../styles/color";
+
+interface CustomInputProps extends TextInputProps {
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  isPassword?: boolean;
+}
+
+export default function CustomInput({
+  label,
+  icon,
+  isPassword = false,
+  ...rest
+}: CustomInputProps) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const secureValue = isPassword ? !isPasswordVisible : false;
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>{label}</Text>
+
+      <View style={styles.inputWrapper}>
+        <Ionicons
+          name={icon}
+          size={20}
+          color={colors.textSecondary}
+          style={styles.leftIcon}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholderTextColor={colors.textMuted}
+          secureTextEntry={secureValue}
+          {...rest}
+        />
+
+        {isPassword && (
+          <TouchableOpacity
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={isPasswordVisible ? "eye-off-outline" : "eye-outline"}
+              size={20}
+              color={colors.textSecondary}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    marginBottom: 18,
+  },
+  label: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  inputWrapper: {
+    minHeight: 56,
+    borderRadius: 14,
+    backgroundColor: colors.input,
+    borderWidth: 1,
+    borderColor: colors.border,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+  },
+  leftIcon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    color: colors.white,
+    fontSize: 16,
+    paddingVertical: 14,
+  },
+});

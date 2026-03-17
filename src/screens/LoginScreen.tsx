@@ -5,258 +5,241 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  TextInput,
   Alert,
-  Switch
+  Switch,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  StatusBar,
 } from "react-native";
-
-import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import CustomInput from "../components/CustomInput";
+import PrimaryButton from "../components/PrimaryButton";
+import { colors } from "../styles/color";
 
 export default function LoginScreen() {
-
-  const [email, setEmail] = useState("");
+  const [rm, setRm] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [remember, setRemember] = useState(false);
+  const [remember, setRemember] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   function handleLogin() {
-    if (!email || !password) {
-      Alert.alert("Erro", "Preencha email e senha.");
+    if (!rm.trim() || !password.trim()) {
+      Alert.alert("Campos obrigatórios", "Preencha seu RM/e-mail e sua senha.");
       return;
     }
 
-    Alert.alert("Login realizado", `Bem-vindo ${email}`);
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+          Alert.alert(
+      "Login concluído",
+      `Seu acesso foi realizado com sucesso.`
+    );
+    }, 1200);
   }
 
   return (
-    <View style={styles.container}>
-      
-      <Image
-        source={{
-          uri: "https://upload.wikimedia.org/wikipedia/commons/6/6b/FIAP_logo.png"
-        }}
-        style={styles.logo}
-      />
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
 
-      <Text style={styles.title}>Portal do Aluno</Text>
-      <Text style={styles.subtitle}>
-        Entre com sua conta FIAP
-      </Text>
-
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Email</Text>
-
-        <View style={styles.inputBox}>
-          <Ionicons name="mail-outline" size={20} color="#777" />
-
-          <TextInput
-            style={styles.input}
-            placeholder="seuemail@fiap.com.br"
-            placeholderTextColor="#999"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-      </View>
-
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Senha</Text>
-
-        <View style={styles.passwordBox}>
-
-          <Ionicons name="lock-closed-outline" size={20} color="#777" />
-
-          <TextInput
-            style={styles.passwordInput}
-            placeholder="Digite sua senha"
-            placeholderTextColor="#999"
-            secureTextEntry={!showPassword}
-            value={password}
-            onChangeText={setPassword}
-          />
-
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.showPassword}>
-              {showPassword ? "Ocultar" : "Mostrar"}
+            <View style={styles.topSection}>
+              <Image
+              source={require("../../assets/fiap-logo.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+
+              <Text style={styles.title}>Portal do Aluno</Text>
+              <Text style={styles.subtitle}>
+                Entre no portal acadêmico da FIAP com seus dados institucionais.
+              </Text>
+            </View>
+
+            <View style={styles.card}>
+              <CustomInput
+                label="E-mail"
+                icon="person-outline"
+                placeholder="Ex: RM123456@fiap.com.br"
+                value={rm}
+                onChangeText={setRm}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+
+              <CustomInput
+                label="Senha"
+                icon="lock-closed-outline"
+                placeholder="Digite sua senha"
+                value={password}
+                onChangeText={setPassword}
+                isPassword
+              />
+
+              <View style={styles.optionsRow}>
+                <View style={styles.rememberWrapper}>
+                  <Switch
+                    value={remember}
+                    onValueChange={setRemember}
+                    trackColor={{
+                      false: "#3A3A42",
+                      true: "rgba(237,20,91,0.45)",
+                    }}
+                    thumbColor={remember ? colors.primary : "#D4D4D8"}
+                    
+                  />
+                  <Text style={styles.rememberText}>Lembrar-me</Text>
+                </View>
+
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Text style={styles.forgotText}>Esqueci minha senha</Text>
+                </TouchableOpacity>
+              </View>
+
+              <PrimaryButton
+                title="Entrar"
+                onPress={handleLogin}
+                loading={loading}
+              />
+
+              <View style={styles.dividerWrapper}>
+                <View style={styles.divider} />
+                <Text style={styles.dividerText}>ou</Text>
+                <View style={styles.divider} />
+              </View>
+
+              <TouchableOpacity style={styles.secondaryButton} activeOpacity={0.8}>
+                <Text style={styles.secondaryButtonText}>Criar conta</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.footer}>
+              © FIAP - Faculdade de Informática e Administração Paulista
             </Text>
-          </TouchableOpacity>
-
-        </View>
-      </View>
-
-
-      <View style={styles.switchContainer}>
-        <Text style={styles.switchText}>Lembrar-me</Text>
-
-        <Switch
-          value={remember}
-          onValueChange={setRemember}
-          thumbColor="#ED145B"
-        />
-      </View>
-
-
-      <TouchableOpacity>
-        <Text style={styles.forgot}>Esqueci minha senha</Text>
-      </TouchableOpacity>
-
-
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
-
-
-      <View style={styles.registerContainer}>
-        <Text style={styles.registerText}>
-          Não tem conta?
-        </Text>
-
-        <TouchableOpacity>
-          <Text style={styles.registerLink}>
-            Criar conta
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.footer}>
-        © FIAP - Faculdade de Informática e Administração Paulista
-      </Text>
-
-    </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-
-    container: {
+  flex: {
     flex: 1,
-    backgroundColor: "#111111",
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: "center",
-    padding: 25
-    },
-    card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    padding: 24
-    },
+    paddingHorizontal: 24,
+    paddingVertical: 28,
+  },
+  topSection: {
+    alignItems: "center",
+    marginBottom: 26,
+  },
   logo: {
-    width: 180,
-    height: 80,
-    alignSelf: "center",
-    marginBottom: 20
+    width: 170,
+    height: 70,
+    marginBottom: 18,
   },
-
   title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#fff",
-    textAlign: "center"
-  },
-
-  subtitle: {
-    color: "#ccc",
+    color: colors.white,
+    fontSize: 28,
+    fontWeight: "800",
     textAlign: "center",
-    marginBottom: 30
+    marginBottom: 8,
   },
-
-  inputContainer: {
-    marginBottom: 18
+  subtitle: {
+    color: colors.textSecondary,
+    fontSize: 15,
+    textAlign: "center",
+    lineHeight: 22,
+    maxWidth: 300,
   },
-
-  label: {
-    color: "#fff",
-    marginBottom: 6,
-    fontSize: 14
+  card: {
+    backgroundColor: colors.card,
+    borderRadius: 24,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: "#202028",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.28,
+    shadowRadius: 22,
+    elevation: 8,
   },
-
-  inputBox: {
+  optionsRow: {
+    marginTop: 2,
+    marginBottom: 8,
+  },
+  rememberWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    paddingHorizontal: 10
+    marginBottom: 14,
   },
-
-  input: {
+  rememberText: {
+    color: colors.textSecondary,
+    fontSize: 14,
+    marginLeft: 8,
+  },
+  forgotText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: "600",
+    alignSelf: "flex-end",
+  },
+  dividerWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 22,
+  },
+  divider: {
     flex: 1,
-    padding: 14,
-    fontSize: 16
+    height: 1,
+    backgroundColor: colors.border,
   },
-
-  passwordBox: {
-    flexDirection: "row",
+  dividerText: {
+    color: colors.textMuted,
+    marginHorizontal: 10,
+    fontSize: 13,
+  },
+  secondaryButton: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 14,
+    paddingVertical: 15,
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    paddingHorizontal: 10
-  },
-
-  passwordInput: {
-    flex: 1,
-    padding: 14,
-    fontSize: 16
-  },
-
-  showPassword: {
-    color: "#ED145B",
-    fontWeight: "bold"
-  },
-
-  switchContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20
-  },
-
-  switchText: {
-    color: "#fff"
-  },
-
-  forgot: {
-    color: "#ED145B",
-    textAlign: "right",
-    marginBottom: 20
-  },
-
-  button: {
-    backgroundColor: "#ED145B",
-    padding: 16,
-    borderRadius: 8,
-    alignItems: "center"
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold"
-  },
-
-  registerContainer: {
-    flexDirection: "row",
     justifyContent: "center",
-    marginTop: 20
+    backgroundColor: "#1B1B20",
   },
-
-  registerText: {
-    color: "#ccc"
+  secondaryButtonText: {
+    color: colors.white,
+    fontSize: 15,
+    fontWeight: "600",
   },
-
-  registerLink: {
-    color: "#ED145B",
-    marginLeft: 5,
-    fontWeight: "bold"
-  },
-
   footer: {
     textAlign: "center",
-    marginTop: 40,
-    color: "#777",
-    fontSize: 12
-  }
-
+    marginTop: 24,
+    color: colors.textMuted,
+    fontSize: 12,
+    lineHeight: 18,
+    paddingHorizontal: 10,
+  },
 });

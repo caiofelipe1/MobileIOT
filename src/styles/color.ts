@@ -1,7 +1,11 @@
 export const colors = {
   primary: "#ED145B",
-  secondary: "#111111",
+  primaryDark: "#C70F4B",
+  background: "#0A0A0D",
+  card: "#15151A",
+  input: "#1D1D23",
+  border: "#2A2A33",
   white: "#FFFFFF",
-  gray: "#3d3d3d",
-  lightGray: "#E5E5E5"
+  textSecondary: "#B3B3BD",
+  textMuted: "#7C7C88",
 };

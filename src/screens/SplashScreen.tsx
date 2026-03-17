@@ -1,37 +1,43 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { colors } from "../styles/color";
 
 export default function SplashScreen({ navigation }: any) {
-
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       navigation.replace("Login");
     }, 2000);
-  }, []);
+
+    return () => clearTimeout(timer);
+  }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={{
-          uri: "/assets/fiapp-loading.png"
-        }}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
+      <View style={styles.content}>
+        <Image
+          source={require("../../assets/fiapp-loading.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ED145B",
-    justifyContent: "center",
-    alignItems: "center"
+    backgroundColor: colors.primary,
   },
-
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   logo: {
     width: 220,
-    height: 120
-  }
+    height: 120,
+  },
 });
