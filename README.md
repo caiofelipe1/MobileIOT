@@ -166,5 +166,5 @@ A tela deverá ser:
 - Recuperação de senha  
 - Feedback de erro em caso de falha de autenticação  
 
-### 🎯 Objetivo
+###  Objetivo
 Garantir acesso seguro ao aplicativo e identificar corretamente o usuário dentro do sistema acadêmico.
