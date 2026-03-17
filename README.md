@@ -7,6 +7,13 @@ O objetivo é centralizar funcionalidades realmente utilizadas no dia a dia pres
 A proposta transforma o aplicativo em um **hub universitário moderno, rápido, intuitivo e funcional**.
 
 ---
+## RM 
+565065 - Augusto Barcelos Barros
+556197 - Caio Felipe de Lima Bezerra
+555541 - Juan Francisco Alves 
+Muradas
+555931 - Lucas Derenze Simidu
+554873 - Sofia Fernandes
 
 ##  Resumo das Ideias Apresentadas
 
